@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lino - Risparmia giocando | Micro-risparmio gamificato</title>
+    <meta name="description" content="Lino il Maialino ti aiuta a risparmiare con micro-accantonamenti automatici e gamification. L'app che trasforma il risparmio in un gioco.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink: #FF6B9D;
+            --pink-light: #FFF0F5;
+            --pink-dark: #E84D7E;
+            --coral: #FF8A80;
+            --gold: #FFB800;
+            --gold-light: #FFF8E1;
+            --green: #00C853;
+            --green-dark: #00A844;
+            --blue: #2979FF;
+            --bg: #FAFAFA;
+            --card: #FFFFFF;
+            --text: #1A1A2E;
+            --text-secondary: #6B7280;
+            --border: #F0F0F0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+            --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--pink-dark);
+            text-decoration: none;
+        }
+
+        .nav-logo svg { width: 32px; height: 32px; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+
+        .nav-cta {
+            background: var(--pink-dark) !important;
+            color: white !important;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: all 0.2s !important;
+        }
+
+        .nav-cta:hover { background: var(--pink) !important; transform: translateY(-1px); }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 8rem 2rem 5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
+            min-height: 100vh;
+        }
+
+        .hero-text { max-width: 560px; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gold-light);
+            color: #B8860B;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.25rem;
+        }
+
+        h1 span { color: var(--pink-dark); }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 480px;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--text);
+            color: white;
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover { background: #333; transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            color: var(--text);
+            padding: 0.9rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover { border-color: #ccc; background: white; }
+
+        .hero-stats {
+            display: flex;
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item strong {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .stat-item span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Phone Mockup */
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 620px;
+            background: var(--text);
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: var(--shadow-lg), 0 30px 60px rgba(0,0,0,0.15);
+            position: relative;
+            transform: rotate(2deg);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #FFF0F5 0%, #FFF8F0 40%, white 100%);
+            border-radius: 30px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2.5rem 1.5rem 1.5rem;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 28px;
+            background: var(--text);
+            border-radius: 0 0 16px 16px;
+            z-index: 2;
+        }
+
+        .app-greeting {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        .app-piggy {
+            width: 100px;
+            height: 100px;
+            margin: 0.75rem 0;
+        }
+
+        .app-piggy svg { width: 100%; height: 100%; }
+
+        .app-balance {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .app-amount {
+            font-family: 'Inter', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .app-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #F0F0F0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.25rem;
+        }
+
+        .app-progress-fill {
+            height: 100%;
+            width: 68%;
+            background: linear-gradient(90deg, var(--pink), var(--coral));
+            border-radius: 4px;
+        }
+
+        .app-goal-text {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .app-cards {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 12px;
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .app-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .app-card-text strong {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .app-card-text span {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+
+        .app-card-amount {
+            margin-left: auto;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--green-dark);
+        }
+
+        .floating-badge {
+            position: absolute;
+            background: white;
+            border-radius: 16px;
+            padding: 0.75rem 1rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            animation: float-badge 6s ease-in-out infinite;
+        }
+
+        .floating-badge.top-left {
+            top: 10%;
+            left: -20px;
+            animation-delay: -2s;
+        }
+
+        .floating-badge.bottom-right {
+            bottom: 15%;
+            right: -30px;
+        }
+
+        @keyframes float-badge {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Section base */
+        section {
+            padding: 5rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 3.5rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--pink-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Features */
+        .features { background: white; }
+
+        .features-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--pink-light);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .fi-pink { background: var(--pink-light); }
+        .fi-gold { background: var(--gold-light); }
+        .fi-green { background: #E8F5E9; }
+        .fi-blue { background: #E3F2FD; }
+        .fi-coral { background: #FFF3E0; }
+        .fi-purple { background: #F3E5F5; }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* How It Works */
+        .how-section {
+            background: var(--bg);
+        }
+
+        .how-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            position: relative;
+        }
+
+        .how-grid::before {
+            content: '';
+            position: absolute;
+            top: 36px;
+            left: 16.66%;
+            right: 16.66%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+        }
+
+        .how-step {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .how-number {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--pink-dark);
+            margin: 0 auto 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .how-step:hover .how-number {
+            background: var(--pink-dark);
+            color: white;
+            border-color: var(--pink-dark);
+        }
+
+        .how-step h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .how-step p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Pricing */
+        .pricing { background: white; }
+
+        .pricing-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .price-card {
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            position: relative;
+        }
+
+        .price-card.featured {
+            border-color: var(--pink-dark);
+            background: linear-gradient(180deg, var(--pink-light) 0%, white 30%);
+        }
+
+        .price-popular {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--pink-dark);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .price-name {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .price-amount span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .price-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .price-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .price-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .price-features li::before {
+            content: '\2713';
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #E8F5E9;
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .price-btn {
+            display: block;
+            width: 100%;
+            padding: 0.9rem;
+            text-align: center;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .price-btn-outline {
+            background: white;
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .price-btn-outline:hover { border-color: #ccc; }
+
+        .price-btn-filled {
+            background: var(--text);
+            color: white;
+        }
+
+        .price-btn-filled:hover { background: #333; }
+
+        /* Social Proof */
+        .social-proof {
+            background: var(--bg);
+        }
+
+        .logos-bar {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            align-items: center;
+            flex-wrap: wrap;
+            opacity: 0.4;
+        }
+
+        .logos-bar span {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .testimonials {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .testimonial {
+            background: white;
+            border-radius: 16px;
+            padding: 1.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .testimonial-stars {
+            color: var(--gold);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+        }
+
+        .testimonial p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .testimonial-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--pink-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .testimonial-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .testimonial-role {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* CTA Final */
+        .final-cta {
+            background: var(--text);
+            color: white;
+            text-align: center;
+            border-radius: 24px;
+            max-width: 1100px;
+            margin: 0 auto 4rem;
+            padding: 4rem 2rem;
+        }
+
+        .final-cta h2 {
+            color: white;
+            margin-bottom: 0.75rem;
+        }
+
+        .final-cta p {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 460px;
+            margin: 0 auto;
+            justify-content: center;
+        }
+
+        .email-form input {
+            flex: 1;
+            padding: 0.9rem 1.25rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            outline: none;
+        }
+
+        .email-form input::placeholder { color: rgba(255,255,255,0.4); }
+
+        .email-form input:focus { background: rgba(255,255,255,0.15); }
+
+        .email-form button {
+            padding: 0.9rem 1.75rem;
+            background: var(--pink-dark);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        .email-form button:hover { background: var(--pink); }
+
+        #success-msg {
+            display: none;
+            color: var(--green);
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: var(--text); }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 6rem; }
+            .hero-text { max-width: 100%; margin: 0 auto; }
+            .hero-desc { max-width: 100%; margin: 0 auto 2rem; }
+            .hero-actions { justify-content: center; }
+            .hero-stats { justify-content: center; }
+            .hero-visual { margin-top: 2rem; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .how-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .how-grid::before { display: none; }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 440px; }
+            .testimonials { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .floating-badge { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .features-grid { grid-template-columns: 1fr; }
+            .email-form { flex-direction: column; }
+            .phone-mockup { width: 260px; height: 540px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" fill="#FF6B9D"/><circle cx="12" cy="13" r="2" fill="white"/><circle cx="20" cy="13" r="2" fill="white"/><ellipse cx="16" cy="18" rx="4" ry="3" fill="#E84D7E"/><circle cx="14" cy="18" r="1" fill="#C62B5C"/><circle cx="18" cy="18" r="1" fill="#C62B5C"/></svg>
+                Lino
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Funzionalita</a></li>
+                <li><a href="#how">Come Funziona</a></li>
+                <li><a href="#pricing">Prezzi</a></li>
+                <li><a href="#signup" class="nav-cta">Accesso Anticipato</a></li>
+            </ul>
+            <button class="hamburger" onclick="this.classList.toggle('open')" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-text">
+            <div class="badge">
+                <div class="badge-dot"></div>
+                Early Access &mdash; Apri la lista d'attesa
+            </div>
+            <h1>Risparmiare non e mai stato cosi <span>divertente</span></h1>
+            <p class="hero-desc">Lino il Maialino trasforma i tuoi micro-risparmi in un gioco. Arrotonda le spese, sfida te stesso e guarda il tuo salvadanaio digitale crescere ogni giorno.</p>
+            <div class="hero-actions">
+                <a href="#signup" class="btn-primary">Unisciti alla Waitlist &#x2192;</a>
+                <a href="#how" class="btn-secondary">&#x25B6; Come Funziona</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <strong>12.4K+</strong>
+                    <span>In lista d'attesa</span>
+                </div>
+                <div class="stat-item">
+                    <strong>&euro;89</strong>
+                    <span>Risparmio medio/mese</span>
+                </div>
+                <div class="stat-item">
+                    <strong>4.9/5</strong>
+                    <span>Rating beta tester</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="floating-badge top-left">
+                &#x1FA99; +&euro;2.30 risparmiati!
+            </div>
+            <div class="phone-mockup">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                    <div class="app-greeting">Ciao! Oggi risparmi?</div>
+                    <div class="app-piggy">
+                        <svg viewBox="0 0 100 100">
+                            <ellipse cx="50" cy="58" rx="35" ry="28" fill="#FF8EB8"/>
+                            <circle cx="50" cy="38" r="22" fill="#FF8EB8"/>
+                            <ellipse cx="35" cy="24" rx="8" ry="10" fill="#FF6B9D" transform="rotate(-15,35,24)"/>
+                            <ellipse cx="65" cy="24" rx="8" ry="10" fill="#FF6B9D" transform="rotate(15,65,24)"/>
+                            <circle cx="43" cy="35" r="3.5" fill="white"/><circle cx="43" cy="35" r="2" fill="#1A1A2E"/>
+                            <circle cx="57" cy="35" r="3.5" fill="white"/><circle cx="57" cy="35" r="2" fill="#1A1A2E"/>
+                            <ellipse cx="50" cy="44" rx="8" ry="6" fill="#FF6B9D"/>
+                            <circle cx="47" cy="44" r="1.5" fill="#E84D7E"/><circle cx="53" cy="44" r="1.5" fill="#E84D7E"/>
+                            <path d="M45 49 Q50 53 55 49" stroke="#E84D7E" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="app-balance">Il tuo salvadanaio</div>
+                    <div class="app-amount">&euro;342,50</div>
+                    <div class="app-progress-bar"><div class="app-progress-fill"></div></div>
+                    <div class="app-goal-text">68% verso il tuo obiettivo &euro;500</div>
+                    <div class="app-cards">
+                        <div class="app-card">
+                            <div class="app-card-icon fi-green">&#x1F4B6;</div>
+                            <div class="app-card-text">
+                                <strong>Arrotondamento</strong>
+                                <span>Caffe - Starbucks</span>
+                            </div>
+                            <div class="app-card-amount">+&euro;0,70</div>
+                        </div>
+                        <div class="app-card">
+                            <div class="app-card-icon fi-gold">&#x1F3AF;</div>
+                            <div class="app-card-text">
+                                <strong>Sfida completata!</strong>
+                                <span>7 giorni senza delivery</span>
+                            </div>
+                            <div class="app-card-amount">+&euro;15</div>
+                        </div>
+                        <div class="app-card">
+                            <div class="app-card-icon fi-pink">&#x1F48E;</div>
+                            <div class="app-card-text">
+                                <strong>Badge sbloccato</strong>
+                                <span>Risparmiatore costante</span>
+                            </div>
+                            <div class="app-card-amount">&#x2B50;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="floating-badge bottom-right">
+                &#x1F3C6; Streak: 23 giorni!
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <div class="section-label">Funzionalita</div>
+            <h2>Tutto cio che serve per risparmiare senza pensarci</h2>
+            <p class="section-desc">Lino usa micro-automazioni intelligenti e gamification per costruire l'abitudine al risparmio, un soldino alla volta.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon fi-pink">&#x1F4B3;</div>
+                <h3>Arrotondamenti Automatici</h3>
+                <p>Ogni pagamento viene arrotondato all'euro successivo. Il resto va dritto nel salvadanaio di Lino. Integrato con Open Banking.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon fi-gold">&#x1F3AF;</div>
+                <h3>Sfide di Risparmio</h3>
+                <p>Sfide settimanali e mensili: "Niente caffe fuori per 5 giorni" = &euro;15 risparmiati. Competi con gli amici.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon fi-green">&#x1F4C8;</div>
+                <h3>Obiettivi Smart</h3>
+                <p>Imposta obiettivi concreti: vacanza, fondo emergenza, regalo. Lino calcola quanto devi mettere da parte ogni giorno.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon fi-blue">&#x1F476;</div>
+                <h3>Modalita Famiglia</h3>
+                <p>Insegna ai tuoi figli il valore del denaro. Ogni bambino ha il suo Lino personale con obiettivi e premi adatti all'eta.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon fi-coral">&#x1F514;</div>
+                <h3>Nudge Intelligenti</h3>
+                <p>Lino ti manda promemoria personalizzati basati sulle tue abitudini di spesa. Mai invadenti, sempre utili.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon fi-purple">&#x1F512;</div>
+                <h3>Sicuro e Regolamentato</h3>
+                <p>I tuoi risparmi sono protetti. Ci appoggiamo a istituti di pagamento autorizzati da Banca d'Italia e conformi PSD2.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-section" id="how">
+        <div class="section-header">
+            <div class="section-label">Come Funziona</div>
+            <h2>Tre passi verso il tuo primo obiettivo</h2>
+            <p class="section-desc">In meno di 2 minuti sei pronto a risparmiare. Nessuna burocrazia.</p>
+        </div>
+        <div class="how-grid">
+            <div class="how-step">
+                <div class="how-number">1</div>
+                <h3>Collega la tua banca</h3>
+                <p>Connetti il tuo conto corrente in modo sicuro tramite Open Banking. Supportiamo tutte le principali banche italiane ed europee.</p>
+            </div>
+            <div class="how-step">
+                <div class="how-number">2</div>
+                <h3>Scegli le tue regole</h3>
+                <p>Arrotondamenti, importo fisso giornaliero, o sfide personalizzate. Tu decidi come e quanto risparmiare.</p>
+            </div>
+            <div class="how-step">
+                <div class="how-number">3</div>
+                <h3>Guarda Lino crescere</h3>
+                <p>Ogni risparmio fa crescere il tuo maialino. Sblocca badge, sali di livello e raggiungi i tuoi obiettivi finanziari.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <div class="section-label">Prezzi</div>
+            <h2>Semplice e trasparente</h2>
+            <p class="section-desc">Inizia gratis. Cresci quando vuoi.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="price-card">
+                <div class="price-name">Lino Free</div>
+                <div class="price-amount">&euro;0 <span>/mese</span></div>
+                <div class="price-desc">Perfetto per iniziare a risparmiare</div>
+                <ul class="price-features">
+                    <li>1 obiettivo di risparmio</li>
+                    <li>Arrotondamenti automatici</li>
+                    <li>Report mensile base</li>
+                    <li>Badge e gamification</li>
+                </ul>
+                <button class="price-btn price-btn-outline">Inizia Gratis</button>
+            </div>
+            <div class="price-card featured">
+                <div class="price-popular">Piu Popolare</div>
+                <div class="price-name">Lino Pro</div>
+                <div class="price-amount">&euro;2,99 <span>/mese</span></div>
+                <div class="price-desc">Per chi fa sul serio con il risparmio</div>
+                <ul class="price-features">
+                    <li>Obiettivi illimitati</li>
+                    <li>Sfide e competizioni con amici</li>
+                    <li>Modalita Famiglia (fino a 4 profili)</li>
+                    <li>Analytics avanzati e previsioni AI</li>
+                    <li>Nudge personalizzati</li>
+                    <li>Supporto prioritario</li>
+                </ul>
+                <button class="price-btn price-btn-filled">Prova 30 Giorni Gratis</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="section-header">
+            <div class="section-label">Cosa Dicono di Noi</div>
+            <h2>Amato dai beta tester</h2>
+        </div>
+        <div class="logos-bar">
+            <span>TechCrunch</span>
+            <span>Il Sole 24 Ore</span>
+            <span>Wired Italia</span>
+            <span>StartupItalia</span>
+        </div>
+        <div class="testimonials">
+            <div class="testimonial">
+                <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p>Ho risparmiato &euro;340 in tre mesi senza neanche accorgermene. Lino rende il risparmio un gioco, letteralmente.</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">&#x1F469;</div>
+                    <div>
+                        <div class="testimonial-name">Giulia M.</div>
+                        <div class="testimonial-role">Freelance, Milano</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p>I miei figli adorano vedere il loro maialino crescere. Finalmente un modo per insegnare l'educazione finanziaria divertendosi.</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">&#x1F468;</div>
+                    <div>
+                        <div class="testimonial-name">Marco R.</div>
+                        <div class="testimonial-role">Papa di 2, Roma</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p>L'integrazione con Open Banking e seamless. In 2 minuti ero operativa. Adesso risparmio &euro;80/mese in automatico.</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">&#x1F469;</div>
+                    <div>
+                        <div class="testimonial-name">Sara L.</div>
+                        <div class="testimonial-role">Product Manager, Torino</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section style="padding: 0 2rem 2rem;">
+        <div class="final-cta" id="signup">
+            <h2>Unisciti a 12.000+ persone che risparmiano con Lino</h2>
+            <p>Entra nella lista d'attesa. Zero spam, solo l'invito quando sara il tuo turno.</p>
+            <form class="email-form" onsubmit="handleSignup(event)">
+                <input type="email" placeholder="la-tua@email.it" required>
+                <button type="submit">Entra nella lista</button>
+            </form>
+            <p id="success-msg">Perfetto! Sei dentro. Lino ti aspetta. &#x1F437;&#x2764;&#xFE0F;</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-left">
+            <svg viewBox="0 0 32 32" fill="none" width="24" height="24"><circle cx="16" cy="16" r="14" fill="#FF6B9D"/><circle cx="12" cy="13" r="2" fill="white"/><circle cx="20" cy="13" r="2" fill="white"/><ellipse cx="16" cy="18" rx="4" ry="3" fill="#E84D7E"/><circle cx="14" cy="18" r="1" fill="#C62B5C"/><circle cx="18" cy="18" r="1" fill="#C62B5C"/></svg>
+            &copy; 2026 Lino S.r.l. &mdash; P.IVA 12345678901
+        </div>
+        <ul class="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Termini di Servizio</a></li>
+            <li><a href="#">Contatti</a></li>
+        </ul>
+    </footer>
+
+    <script>
+        function handleSignup(e) {
+            e.preventDefault();
+            e.target.style.display = 'none';
+            document.getElementById('success-msg').style.display = 'block';
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
